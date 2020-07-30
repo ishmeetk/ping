@@ -17,7 +17,6 @@ const { v4: uuidV4 } = require('uuid')
 
  io.on('connection', socket => {
      socket.on('join-room', (roomId, userId) => {
-        //console.log(roomId, userId)
         socket.join(roomId)
         socket.to(roomId).broadcast.emit('user-connected', userId)
 
@@ -27,4 +26,4 @@ const { v4: uuidV4 } = require('uuid')
      }) 
  })
 
-server.listen(3000)
+server.listen(5000)
