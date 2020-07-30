@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <link rel="stylesheet" type="text/css" href="style.css"> 
+
     <script>    
         const ROOM_ID = "<%= roomId %>"
     </script>
@@ -38,27 +40,9 @@
     </style>
 </head>
 <body>
+    <div id="video-grid"></div>
 
-    <!-- style = "background: url(https://image.shutterstock.com/image-vector/welcome-poster-spectrum-brush-strokes-260nw-1146069941.jpg)" -->
-
-    <button style="text-align: right"> SignUp </button>
-    <button> LogIn </button>
-
-    <h1 id="myHeader">Hello World!</h1>
-
-    <button onclick = displayResult()> Go to the video conference room </button>
-
-    <!-- <div id = "video-grid"> </div> -->
-
-    <!-- <script> -->
-        function displayResult() {
-            <!-- document.getElementById("myHeader").innerHTML = "Have a nice day!"; -->
-            <div id = "video-grid"> </div>
-        }
-    <!-- </script> -->
-
-    <!-- <div id = "video-grid"> </div> -->
-
-
+    <button id="join-room"> Go to the video conference room </button>
+    
 </body>
 </html>
