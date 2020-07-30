@@ -15,13 +15,18 @@ app.get('/:room', (req, res) => {
   res.render('room', { roomId: req.params.room })
 })
 
-io.on('connection', socket => {
-  socket.on('join-room', (roomId, userId) => {
+io.on('connection', socket => { // STEP 1.1
+  socket.on('join-room', (roomId, userId) => { // STEP 2.2
     socket.join(roomId)
-    socket.to(roomId).broadcast.emit('user-connected', userId)
+    socket.to(roomId).broadcast.emit('user-connected', userId) // STEP 2.3
 
     socket.on('disconnect', () => {
-      socket.to(roomId).broadcast.emit('user-disconnected', userId)
+      socket.to(roomId).broadcast.emit('user-disconnected', userId) // STEP 4
+    })
+
+    // TODO
+    socket.on('pingUser', (data) => {
+      // socket.to(roomId).broadcast.emit('start-ping', )
     })
   })
 })
