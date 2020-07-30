@@ -16,7 +16,7 @@ navigator.mediaDevices.getUserMedia({ // STEP 3
   video: true, // include video in stream
   audio: true // include audio in stream
 }).then(stream => { // current user's stream
-
+  console.log(stream.getTracks())
   // add current user's stream to current user's page
   addVideoStream(myVideo, stream)
 
