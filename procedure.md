@@ -47,3 +47,7 @@ There are sub-steps to indicate steps happen at the same time, instead of a line
   ### STEP 4.1
     script.js:40
         Close the peerjs connection for that userId that just left (everyone but the current user calls this, eventually the last user will trigger STEP 4 but no user will be left to run STEP 4.1)
+
+Possible solution:
+Sending audio/video stream through socket.io instead of peerjs (we may need to configure our peerjs server)
+https://stackoverflow.com/questions/49868353/send-video-audio-over-socket-io-from-browser
