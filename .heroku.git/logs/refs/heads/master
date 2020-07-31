@@ -8,3 +8,5 @@ e3c125af88aa4b0c499d8104d2672fd681446831 3b2c78f54f3531f83485e99aa4e0aa76d78502e
 3b2c78f54f3531f83485e99aa4e0aa76d78502ed ed914c70668fc66f92231be5f3bb33219a9f6468 John <jhvoong@ucdavis.edu> 1595969537 -0700	commit: auto commit
 ed914c70668fc66f92231be5f3bb33219a9f6468 cd8592b8e63ffc85e07535d8e1c7f766904fabb0 John <jhvoong@ucdavis.edu> 1595969652 -0700	commit: auto commit
 cd8592b8e63ffc85e07535d8e1c7f766904fabb0 1790c6d0fc7941790056462122f24c9eee2233be John <jhvoong@ucdavis.edu> 1595969907 -0700	commit: auto commit
+1790c6d0fc7941790056462122f24c9eee2233be 647e1643cbca80b5cd15c23edb6777f0ba9c9fb0 John <jhvoong@ucdavis.edu> 1596150736 -0700	commit: Added join button
+647e1643cbca80b5cd15c23edb6777f0ba9c9fb0 855fbbaa6b0d4782bac755d965c4ae2060aad5a7 John <jhvoong@ucdavis.edu> 1596225823 -0700	commit: Untested peerjs/socketio separation
