@@ -6,7 +6,13 @@ class User {
     // static videoGrid = document.getElementById('video-grid')
     static peers = {}
     static peerStatuses = {} // object peerId(String):{connected(Boolean), stream(Object)}(Object)
-
+// TODO last resort bad unscalable data structure for streams
+// 1 -> 2
+// 1 -> 3
+// [
+//     [1, 2, data],
+//     [1, 3, dataOther]
+// ]
     constructor() {
         console.log("Started io connection")
         this.socket = io('/')
@@ -65,7 +71,7 @@ function connectToNewUser (user, newPeerId, myStream) {
 function addPingListener(video, user) {
     video.addEventListener('click', e => {
         console.log(user)
-        const peerIds = Object.keys(User.peerStatuses)
+        const peerIds = Object.keys(User.peerStatuses) // TODO this needs the stream objects
         console.log('Clicked')
         // turn off video/audio streaming in all other peers
 
@@ -74,6 +80,8 @@ function addPingListener(video, user) {
             
             if (peerIds[i] !== video.id && peerIds[i] !== user.myPeerObj.id) {
                 console.log('should run once')
+                // stream.getTracks()[0].stop() // audio
+                // stream.getTracks()[1].stop() // video
             }
         }
     })
@@ -119,9 +127,12 @@ function init() {
                     console.log("Loop: i -> " + i)
                     console.log(User.peerStatuses)
                     peerId = data.peerIds[i]
+
+                    // TODO store streams here?
                     User.peerStatuses[peerId] = {
                         connected: true,
-                        stream: stream
+                        stream: stream,
+                        // receiverPeerId: 
                     }
                 }
                 connectToNewUser(user, data.peerId, stream)
@@ -129,10 +140,11 @@ function init() {
         })
 
         // update dynamic variable
-        // user.socket.on('user-disconnected', peerId => {
-            
-        //     //peerId.socket.close();
-        //     //alert("event triggered");
+        // user.socket.on('user-disconnected', peerIds => {
+        //     console.log(User.peers)
+        //     console.log(peerId)
+        //     User.peers[peerId].close()
+        //     alert("event triggered");
         //     // console.log("triggered")
             
         //     if(!User.peerStatuses[peerId]) { // peerId(String):connected(Boolean)
@@ -151,10 +163,9 @@ function init() {
         })
 
         // handle current user disconnect
-        user.myPeerObj.on('disconnected', () => {
+        user.myPeerObj.on('close', () => {
             user.socket.emit('leave-room', ROOM_ID, peerId)  
             // TODO need to update server's dynamic variables
-            User.peers[peerId].close() // close the video
         })
 
         joinRoomBtn.classList.add("hidden");
