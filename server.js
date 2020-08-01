@@ -21,17 +21,17 @@ io.on('connection', socket => {
 
   console.log("hello 1");
   console.log(socket.id)
-  socket.on('join-room', (roomId, peer_id, closeConnection) => {
+  socket.on('join-room', (roomId, peerId) => {
 
     console.log("hello 2");
 
-    socketIdToPeerId[socket.id] = {peerId: peer_id, close: closeConnection}
+    socketIdToPeerId[socket.id] = peerId
 
     socket.join(roomId)
     console.log(socketIdToPeerId)
     socket.to(roomId).broadcast.emit('user-connected', JSON.stringify(
       {
-        peerId: peer_id,
+        peerId: peerId,
         peerIds: Object.values(socketIdToPeerId) // array of all peer ids
       }
     ))

@@ -6,6 +6,7 @@ class User {
     // static videoGrid = document.getElementById('video-grid')
     static peers = {}
     static peerStatuses = {} // object peerId(String):connected(Boolean)
+
     constructor() {
         console.log("Started io connection")
         this.socket = io('/')
@@ -14,7 +15,7 @@ class User {
             console.log(this.socket.id)
         })
         console.log("Started peerjs connection")
-        this.myPeer = new Peer(undefined, {
+        this.myPeerObj = new Peer(undefined, {
           host:'peerjs-server.herokuapp.com', secure:true, port:443
             // host: '/', port:3001
         })
@@ -28,29 +29,44 @@ function addVideoStream(video, stream) {
     console.log("Adding video stream")
     console.log(stream)
     video.srcObject = stream
+
+    // play stream in video
     video.addEventListener('loadedmetadata', () => {
         video.play()
     })
+
+    // add video to HTML
     document.getElementById('video-grid').append(video)
 }
 
-function connectToNewUser (myPeer, peerId, myStream) {
+function connectToNewUser (myPeerObj, newPeerId, myStream) {
     console.log('connectToNewUser')
-    const call = myPeer.call(peerId, myStream)
+    const call = myPeerObj.call(newPeerId, myStream)
     console.log("Calling other peer")
     const video = document.createElement('video')
-
+    addPingListener(video)
+    video.id = newPeerId
     call.on('stream', userVideoStream => {
         console.log("Showing whoever called us's video")
         addVideoStream(video, userVideoStream)
+
     })
     call.on('close', () => {
         video.remove()
     })
 
-    User.peers[peerId] = call
+    User.peers[newPeerId] = call
 }
-  
+
+// add a click event for pinging
+function addPingListener(video) {
+    video.addEventListener('click', e => {
+        alert("clicked i-> ", e.target.id)
+        // TODO start ping call
+        // broadcast to only this video
+    })
+}
+
 function init() {
     const joinRoomBtn = document.getElementById("join-room");
     joinRoomBtn.addEventListener("click", function() {
@@ -67,12 +83,13 @@ function init() {
             addVideoStream(user.myVideo, stream)
 
             // answer any calls from other peers from the peerjs server
-            user.myPeer.on('call', call => {
+            user.myPeerObj.on('call', call => {
                 console.log("Received call")
                 console.log(call)
                 call.answer(stream)
 
                 const video = document.createElement('video')
+                addPingListener(video)
                 call.on('stream', userVideoStream => {
                     console.log("Showing the person we called's video")
                     console.log(userVideoStream)
@@ -90,38 +107,38 @@ function init() {
                     peerId = data.peerIds[i]
                     User.peerStatuses[peerId] = true
                 }
-                connectToNewUser(user.myPeer, data.peerId, stream)
+                connectToNewUser(user.myPeerObj, data.peerId, stream)
             })
         })
 
         // update dynamic variable
-        user.socket.on('user-disconnected', peerId => {
+        // user.socket.on('user-disconnected', peerId => {
             
-            //peerId.socket.close();
-            //alert("event triggered");
-            // console.log("triggered")
+        //     //peerId.socket.close();
+        //     //alert("event triggered");
+        //     // console.log("triggered")
             
-            // if(!User.peerStatuses[userId]) { // peerId(String):connected(Boolean)
-            //     console.error("User was already disconnected, how did this happen?")
-            // } else {
-            //     User.peerStatuses[userId] = false // update dynamic variable
-            // }
-        })
+        //     if(!User.peerStatuses[peerId]) { // peerId(String):connected(Boolean)
+        //         console.error("User was already disconnected, how did this happen?")
+        //     } else {
+        //         User.peerStatuses[peerId] = false // update dynamic variable
+        //     }
+        // })
 
         // runs when peerjs connection is made
-        user.myPeer.on('open', peerId => {
+        user.myPeerObj.on('open', myPeerId => {
             console.log("PeerJS finished connection")
-            console.log("Peer id: ", peerId)
-            user.socket.emit('join-room', ROOM_ID, peerId)
+            console.log("Peer id: ", myPeerId)
+            user.myVideo.id = myPeerId // store peer id in html
+            user.socket.emit('join-room', ROOM_ID, myPeerId)
         })
 
         // handle current user disconnect
-        //user.myPeer.on('disconnected', () => {
-            // alert("bye");
-            //user.socket.emit('leave-room', ROOM_ID, peerId)  
-            
-            //User.peers[userId].close() // close the video
-        //})
+        user.myPeerObj.on('disconnected', () => {
+            user.socket.emit('leave-room', ROOM_ID, peerId)  
+            // TODO need to update server's dynamic variables
+            User.peers[peerId].close() // close the video
+        })
 
         joinRoomBtn.classList.add("hidden");
         //console.log(user.id)
