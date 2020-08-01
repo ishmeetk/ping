@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", init)
 class User {
     // static videoGrid = document.getElementById('video-grid')
     static peers = {}
-    static peerStatuses = {} // object peerId(String):connected(Boolean)
+    static peerStatuses = {} // object peerId(String):{connected(Boolean), stream(Object)}(Object)
 
     constructor() {
         console.log("Started io connection")
@@ -23,6 +23,8 @@ class User {
         this.myVideo = document.createElement('video')
         this.myVideo.muted = true
     }
+
+
 }
 
 function addVideoStream(video, stream) {
@@ -39,12 +41,13 @@ function addVideoStream(video, stream) {
     document.getElementById('video-grid').append(video)
 }
 
-function connectToNewUser (myPeerObj, newPeerId, myStream) {
+function connectToNewUser (user, newPeerId, myStream) {
+    const { myPeerObj } = user
     console.log('connectToNewUser')
     const call = myPeerObj.call(newPeerId, myStream)
     console.log("Calling other peer")
     const video = document.createElement('video')
-    addPingListener(video)
+    addPingListener(video, user)
     video.id = newPeerId
     call.on('stream', userVideoStream => {
         console.log("Showing whoever called us's video")
@@ -59,11 +62,20 @@ function connectToNewUser (myPeerObj, newPeerId, myStream) {
 }
 
 // add a click event for pinging
-function addPingListener(video) {
+function addPingListener(video, user) {
     video.addEventListener('click', e => {
-        alert("clicked i-> ", e.target.id)
-        // TODO start ping call
-        // broadcast to only this video
+        console.log(user)
+        const peerIds = Object.keys(User.peerStatuses)
+        console.log('Clicked')
+        // turn off video/audio streaming in all other peers
+
+        for (let i = 0; i < peerIds.length; i++) {
+            console.log("PeerIds[i]:"+ peerIds[i])
+            
+            if (peerIds[i] !== video.id && peerIds[i] !== user.myPeerObj.id) {
+                console.log('should run once')
+            }
+        }
     })
 }
 
@@ -89,7 +101,7 @@ function init() {
                 call.answer(stream)
 
                 const video = document.createElement('video')
-                addPingListener(video)
+                addPingListener(video, user)
                 call.on('stream', userVideoStream => {
                     console.log("Showing the person we called's video")
                     console.log(userVideoStream)
@@ -100,14 +112,19 @@ function init() {
             // connect to other peers already in peerjs server after socket has connected to express
             user.socket.on('user-connected', (data) => {
                 data = JSON.parse(data);
-                
+                console.log(data)
                 let peerId;
                 // sync with server
                 for (let i = 0; i < data.peerIds.length; i++) {
+                    console.log("Loop: i -> " + i)
+                    console.log(User.peerStatuses)
                     peerId = data.peerIds[i]
-                    User.peerStatuses[peerId] = true
+                    User.peerStatuses[peerId] = {
+                        connected: true,
+                        stream: stream
+                    }
                 }
-                connectToNewUser(user.myPeerObj, data.peerId, stream)
+                connectToNewUser(user, data.peerId, stream)
             })
         })
 

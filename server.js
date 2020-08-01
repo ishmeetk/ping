@@ -29,7 +29,9 @@ io.on('connection', socket => {
 
     socket.join(roomId)
     console.log(socketIdToPeerId)
-    socket.to(roomId).broadcast.emit('user-connected', JSON.stringify(
+    
+    // broadcast to all clients in room including sender
+    io.to(roomId).emit('user-connected', JSON.stringify(
       {
         peerId: peerId,
         peerIds: Object.values(socketIdToPeerId) // array of all peer ids
