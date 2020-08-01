@@ -106,17 +106,14 @@ function init() {
         })
 
         // handle current user disconnect
-        user.myPeer.on('disconnected', () => {
-
-            user.socket.emit('leave-room', ROOM_ID, peerId)  
+        //user.myPeer.on('disconnected', () => {
+            // alert("bye");
+            //user.socket.emit('leave-room', ROOM_ID, peerId)  
             
-            User.peers[userId].close() // close the video
-
-            
-        })
+            //User.peers[userId].close() // close the video
+        //})
 
         joinRoomBtn.classList.add("hidden");
-        //console.log(user.id)
     })
 }
 
