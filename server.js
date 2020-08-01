@@ -4,16 +4,7 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const { v4: uuidV4 } = require('uuid')
 
-const socketIdToPeer = {}
-
-/*
-  socketIdtoPeer"::::
-
-  Socket -> object {
-    -> peerId, close
-  }
-
-*/
+const socketIdToPeerId = {}
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -29,28 +20,27 @@ app.get('/:room', (req, res) => {
 io.on('connection', socket => {
 
   console.log("hello 1");
-  
+  console.log(socket.id)
   socket.on('join-room', (roomId, peer_id, closeConnection) => {
 
     console.log("hello 2");
 
-    socketIdToPeer[socket.id] = {peerId: peer_id, close: closeConnection}
+    socketIdToPeerId[socket.id] = {peerId: peer_id, close: closeConnection}
 
     socket.join(roomId)
-
+    console.log(socketIdToPeerId)
     socket.to(roomId).broadcast.emit('user-connected', JSON.stringify(
       {
         peerId: peer_id,
-        
-        peerIds: Object.values(socketIdToPeer).map(peer => peer.id) // array of all peer ids
+        peerIds: Object.values(socketIdToPeerId) // array of all peer ids
       }
     ))
 
     
     
     socket.on('leave-room', () => {
-      delete socketIdToPeerId[peerId] // update peer variable that peer has left
-
+      delete socketIdToPeerId[socket.id] // update peer variable that peer has left
+      console.log(socketIdToPeerId)
       // tell all other clients to update their peer id list
       socket.to(roomId).broadcast.emit('user-disconnected', JSON.stringify(
         {
@@ -69,7 +59,7 @@ io.on('connection', socket => {
 
       // socketIdToPeer[socket.id].close();
       socket.to(roomId).broadcast.emit('user-disconnected', 
-      socketIdToPeer[socket.id].peerId);
+      socketIdToPeerId[socket.id].peerId);
     })
 
     // TODO

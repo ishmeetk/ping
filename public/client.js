@@ -7,8 +7,13 @@ class User {
     static peers = {}
     static peerStatuses = {} // object peerId(String):connected(Boolean)
     constructor() {
+        console.log("Started io connection")
         this.socket = io('/')
-        
+        this.socket.on('connect', () => {
+            console.log("Finished io connection")
+            console.log(this.socket.id)
+        })
+        console.log("Started peerjs connection")
         this.myPeer = new Peer(undefined, {
           host:'peerjs-server.herokuapp.com', secure:true, port:443
             // host: '/', port:3001
@@ -20,6 +25,8 @@ class User {
 }
 
 function addVideoStream(video, stream) {
+    console.log("Adding video stream")
+    console.log(stream)
     video.srcObject = stream
     video.addEventListener('loadedmetadata', () => {
         video.play()
@@ -27,20 +34,18 @@ function addVideoStream(video, stream) {
     document.getElementById('video-grid').append(video)
 }
 
-function connectToNewUser (myPeer, peerId, stream) {
+function connectToNewUser (myPeer, peerId, myStream) {
     console.log('connectToNewUser')
-    const call = myPeer.call(peerId, stream)
+    const call = myPeer.call(peerId, myStream)
     console.log("Calling other peer")
     const video = document.createElement('video')
 
     call.on('stream', userVideoStream => {
-        console.log("Accepted call from someone else")
+        console.log("Showing whoever called us's video")
         addVideoStream(video, userVideoStream)
     })
     call.on('close', () => {
-        video.src
         video.remove()
-
     })
 
     User.peers[peerId] = call
@@ -51,20 +56,26 @@ function init() {
     joinRoomBtn.addEventListener("click", function() {
         // create user object
         user = new User()
+        console.log('Initialized user')
 
         // get user's video/audio
         navigator.mediaDevices.getUserMedia({
             video: true,
             audio: false
         }).then(stream => {
+            console.log("Gave permission")
             addVideoStream(user.myVideo, stream)
 
             // answer any calls from other peers from the peerjs server
             user.myPeer.on('call', call => {
+                console.log("Received call")
+                console.log(call)
                 call.answer(stream)
 
                 const video = document.createElement('video')
                 call.on('stream', userVideoStream => {
+                    console.log("Showing the person we called's video")
+                    console.log(userVideoStream)
                     addVideoStream(video, userVideoStream)
                 })
             })
@@ -72,7 +83,6 @@ function init() {
             // connect to other peers already in peerjs server after socket has connected to express
             user.socket.on('user-connected', (data) => {
                 data = JSON.parse(data);
-                //{userId, peerIds}
                 
                 let peerId;
                 // sync with server
@@ -100,9 +110,9 @@ function init() {
 
         // runs when peerjs connection is made
         user.myPeer.on('open', peerId => {
-            console.log("hello 3");
-            console.log(user.myPeer);
-            user.socket.emit('join-room', ROOM_ID, peerId, user.myPeer.close)
+            console.log("PeerJS finished connection")
+            console.log("Peer id: ", peerId)
+            user.socket.emit('join-room', ROOM_ID, peerId)
         })
 
         // handle current user disconnect
@@ -117,6 +127,7 @@ function init() {
 
         joinRoomBtn.classList.add("hidden");
         //console.log(user.id)
+        console.log("End of function")
     })
 }
 
