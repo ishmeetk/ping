@@ -1,0 +1,13 @@
+.hidden {
+    display:none
+}
+
+body {
+    margin: 50;
+    font-family: "Montserrat";
+    /* background-image: url(https://image.shutterstock.com/image-vector/welcome-poster-spectrum-brush-strokes-260nw-1146069941.jpg); */
+    background-image: url(moon_hack.png);
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: 100% 100%;
+}
