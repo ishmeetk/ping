@@ -3,15 +3,15 @@ let user;
 document.addEventListener("DOMContentLoaded", init)
 
 class User {
-    static videoGrid = document.getElementById('video-grid')
+    // static videoGrid = document.getElementById('video-grid')
     static peers = {}
     static peerStatuses = {} // object peerId(String):connected(Boolean)
     constructor() {
         this.socket = io('/')
         
         this.myPeer = new Peer(undefined, {
-        //   host:'peerjs-server.herokuapp.com', secure:true, port:443
-            host: '/', port:3001
+          host:'peerjs-server.herokuapp.com', secure:true, port:443
+            // host: '/', port:3001
         })
         
         this.myVideo = document.createElement('video')
@@ -23,20 +23,24 @@ function addVideoStream(video, stream) {
     video.srcObject = stream
     video.addEventListener('loadedmetadata', () => {
         video.play()
-
     })
-    User.videoGrid.append(video)
+    document.getElementById('video-grid').append(video)
 }
 
 function connectToNewUser (myPeer, peerId, stream) {
+    console.log('connectToNewUser')
     const call = myPeer.call(peerId, stream)
+    console.log("Calling other peer")
     const video = document.createElement('video')
 
     call.on('stream', userVideoStream => {
+        console.log("Accepted call from someone else")
         addVideoStream(video, userVideoStream)
     })
     call.on('close', () => {
+        video.src
         video.remove()
+
     })
 
     User.peers[peerId] = call
@@ -116,3 +120,5 @@ function init() {
     })
 }
 
+// TODO test out to see if peer is there but not showing
+// TODO maybe try another browser popup

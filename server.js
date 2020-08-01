@@ -67,7 +67,7 @@ io.on('connection', socket => {
       //Test
       //console.log(socketIdToPeer);
 
-      socketIdToPeer[socket.id].close();
+      // socketIdToPeer[socket.id].close();
       socket.to(roomId).broadcast.emit('user-disconnected', 
       socketIdToPeer[socket.id].peerId);
     })
