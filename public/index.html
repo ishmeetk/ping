@@ -39,7 +39,7 @@
         <header>
             <nav>
                 <a href="#" class="hide-desktop"></a>
-                <ul class="show-desktop hide-desktop">
+                <ul class="show-desktop">
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Contact Us</a></li>
                     <li><a href="#">Log In</a></li>
@@ -49,24 +49,31 @@
             </nav>
         </header>
 
+
+        <!-- window.location.href = 'http://www.google.com'; //Will take you to Google.  -->
         <section>
             <!-- <img src="moon_hack.png" alt="Home" class="server"> -->
             <h1>Why dial a ring when you can just ping?</h1>
-            <p>Have you ever thought how easy would it be to
+            <h4>Have you ever thought how easy would it be to
                 talk to your friend or colleague in a virtual
                 meeting without having to end your current conference?
-            </p>
+            </h4>
 
             <Section>
                 Video Conference
-            </Section>
-            <li><a href="#">Host a Meeting</a></li>
-            <li><a href="#">Join Meeting</a></li>
-            <li><a href="#">Schedule a Meeting</a></li>
-        </section>
+            </Section class="meetings">
+                <button class="butt" onclick="host()">Host a Meeting</button>
+                <button class="butt">Join a Meeting</button>
+                <button class="butt">Schedule a Meeting</button>
+           </section>
     </div>
 
-    <div class="gray-container">
+    <script>
+        function host(){
+            alert("you clicked host");
+        }
+    </script>
+    <!-- <div class="gray-container">
         <div class="container">
             <ul>
                 <li>
@@ -78,10 +85,10 @@
                 </li>
             </ul>
         </div>
-    </div>
+    </div> -->
 
     <footer>
-        <div class="footer-contaier">
+        <div class="footer-container">
             <div class="container">
                 <ul class="footer-links">
                     <li><a href="#">Terms of Service</a></li>
@@ -91,8 +98,6 @@
         </div>
     </footer>
     <div id="video-grid"></div>
-    
-    <h1> Whom do you want to ping today? </h1>
 
     <!-- <HR>
     <A href="javascript:history.go(-1);">
@@ -102,7 +107,7 @@
         <IMG BORDER = 0 SRC="right.gif";>
     </A>
     <HR> -->
-
+<a href="/room"
     <button id="join-room"> Go to the video conference room </button>
     
 </body>

@@ -20,11 +20,7 @@ app.get('/:room', (req, res) => {
 
 io.on('connection', socket => {
 
-  console.log("hello 1");
-  console.log(socket.id)
   socket.on('join-room', (roomId, peerId) => {
-
-    console.log("hello 2");
 
     socketIdToPeerId[socket.id] = peerId
 

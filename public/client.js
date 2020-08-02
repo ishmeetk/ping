@@ -139,21 +139,6 @@ function init() {
             })
         })
 
-        // update dynamic variable
-        // user.socket.on('user-disconnected', peerIds => {
-        //     console.log(User.peers)
-        //     console.log(peerId)
-        //     User.peers[peerId].close()
-        //     alert("event triggered");
-        //     // console.log("triggered")
-            
-        //     if(!User.peerStatuses[peerId]) { // peerId(String):connected(Boolean)
-        //         console.error("User was already disconnected, how did this happen?")
-        //     } else {
-        //         User.peerStatuses[peerId] = false // update dynamic variable
-        //     }
-        // })
-
         // runs when peerjs connection is made
         user.myPeerObj.on('open', myPeerId => {
             console.log("PeerJS finished connection")
@@ -173,6 +158,3 @@ function init() {
         console.log("End of function")
     })
 }
-
-// TODO test out to see if peer is there but not showing
-// TODO maybe try another browser popup
