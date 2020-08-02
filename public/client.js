@@ -1,26 +1,33 @@
+
+// TODO test out to see if peer is there but not showing
+// TODO maybe try another browser popup
+
 let user;
 
 document.addEventListener("DOMContentLoaded", init)
 
+
+
+/*
+    Holds all the connection information used throughout this script
+  
+    Socket connection, peerjs connection, as well as the user's own video DOM object is stored here
+  
+*/
 class User {
-    // static videoGrid = document.getElementById('video-grid')
+    static calls
+    static inPing = false
+    static calleeId
     static peers = {}
-    static peerStatuses = {} // object peerId(String):{connected(Boolean), stream(Object)}(Object)
-// TODO last resort bad unscalable data structure for streams
-// 1 -> 2
-// 1 -> 3
-// [
-//     [1, 2, data],
-//     [1, 3, dataOther]
-// ]
+    static pingStatus = {}
     constructor() {
-        console.log("Started io connection")
+        
         this.socket = io('/')
         this.socket.on('connect', () => {
-            console.log("Finished io connection")
-            console.log(this.socket.id)
+            
+            
         })
-        console.log("Started peerjs connection")
+        
         this.myPeerObj = new Peer(undefined, {
           host:'peerjs-server.herokuapp.com', secure:true, port:443
             // host: '/', port:3001
@@ -29,13 +36,26 @@ class User {
         this.myVideo = document.createElement('video')
         this.myVideo.muted = true
     }
-
-
 }
 
+/*
+    Displays video stream to HTML
+  
+    Renders the video stream through a provided HTML DOM element created by client.js.
+    Then, appends the new video element to the DOM.
+  
+    Parameters: 
+    video (DOMNode): HTML element to append to the DOM
+    stream (MediaStream Object): Stream containing video and audio to stream
+    https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
+
+    Returns: 
+    null
+  
+*/
 function addVideoStream(video, stream) {
-    console.log("Adding video stream")
-    console.log(stream)
+    
+    
     video.srcObject = stream
 
     // play stream in video
@@ -47,132 +67,169 @@ function addVideoStream(video, stream) {
     document.getElementById('video-grid').append(video)
 }
 
+/*
+    Start a call with another peer
+  
+    Using the already established connection to the peer js server,
+    start a call with another peer and send them the user's stream
+  
+    Parameters: 
+    user (User class): Instance of User class 
+    newPeerId (String): Peer's id to connect to via peer js
+    myStream (MediaStream Object): Stream to send to other peer
+
+    Returns: 
+    null
+  
+*/
 function connectToNewUser (user, newPeerId, myStream) {
     const { myPeerObj } = user
-    console.log('connectToNewUser')
+    
     const call = myPeerObj.call(newPeerId, myStream)
-    console.log("Calling other peer")
     const video = document.createElement('video')
     addPingListener(video, user)
     video.id = newPeerId
     call.on('stream', userVideoStream => {
-        console.log("Showing whoever called us's video")
+        
         addVideoStream(video, userVideoStream)
-
     })
     call.on('close', () => {
+        
         video.remove()
     })
 
     User.peers[newPeerId] = call
 }
 
-// add a click event for pinging
+/*
+    Handles the ping event on a click to a peer's video
+  
+    Assigns a click event listener to other peer's videos, which
+    converts the necessary bidirectional connections into unidirectional
+    connections.
+  
+    Parameters: 
+    video (DOMNode): HTML element to append to the DOM
+    user (User class): Instance of User class 
+    https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
+
+    Returns: 
+    null
+  
+*/
 function addPingListener(video, user) {
     video.addEventListener('click', e => {
-        console.log(user)
-        const peerIds = Object.keys(User.peerStatuses) // TODO this needs the stream objects
-        console.log('Clicked')
-        // turn off video/audio streaming in all other peers
+        
+        const pingeePeerId = video.id
+        const myPeerId = user.myPeerObj.id
 
-        for (let i = 0; i < peerIds.length; i++) {
-            console.log("PeerIds[i]:"+ peerIds[i])
-            
-            if (peerIds[i] !== video.id && peerIds[i] !== user.myPeerObj.id) {
-                console.log('should run once')
-                // stream.getTracks()[0].stop() // audio
-                // stream.getTracks()[1].stop() // video
-            }
-        }
+        user.socket.emit("startPing", myPeerId, pingeePeerId)
     })
 }
 
+
+/*
+    Main function that runs on page load
+  
+    Assigns an event listener to the join room button, which, on click, 
+    will retrieve the user's media stream and set up listeners from 
+    the Express server and other peers on the peer js server
+  
+    Parameters: 
+    None
+
+    Returns: 
+    null
+  
+*/
 function init() {
     const joinRoomBtn = document.getElementById("join-room");
     joinRoomBtn.addEventListener("click", function() {
         // create user object
         user = new User()
-        console.log('Initialized user')
+        
 
         // get user's video/audio
         navigator.mediaDevices.getUserMedia({
             video: true,
-            audio: false
-        }).then(stream => {
-            console.log("Gave permission")
-            addVideoStream(user.myVideo, stream)
+            audio: true
+        }).then(myStream => {
+            
+            addVideoStream(user.myVideo, myStream)
 
             // answer any calls from other peers from the peerjs server
             user.myPeerObj.on('call', call => {
-                console.log("Received call")
-                console.log(call)
-                call.answer(stream)
+                if (User.inPing) {
+                    call.answer(null) // unidirectional
+                } else {
+                    call.answer(myStream) // bidirectional
 
+                }
                 const video = document.createElement('video')
                 addPingListener(video, user)
-                call.on('stream', userVideoStream => {
-                    console.log("Showing the person we called's video")
-                    console.log(userVideoStream)
-                    addVideoStream(video, userVideoStream)
+                call.on('stream', peerStream => {
+                    addVideoStream(video, peerStream)
                 })
             })
 
             // connect to other peers already in peerjs server after socket has connected to express
             user.socket.on('user-connected', (data) => {
                 data = JSON.parse(data);
-                console.log(data)
-                let peerId;
-                // sync with server
-                for (let i = 0; i < data.peerIds.length; i++) {
-                    console.log("Loop: i -> " + i)
-                    console.log(User.peerStatuses)
-                    peerId = data.peerIds[i]
+                
+                connectToNewUser(user, data.peerId, myStream)
+            })
 
-                    // TODO store streams here?
-                    User.peerStatuses[peerId] = {
-                        connected: true,
-                        stream: stream,
-                        // receiverPeerId: 
-                    }
+            user.socket.on("ping-rewire", peerInfo => {
+                peerInfo = JSON.parse(peerInfo)
+                const myPeerId = user.myPeerObj.id
+                let id, inPing;
+                User.inPing = peerInfo[myPeerId]
+                if (User.inPing) {
+                    Object.entries(peerInfo).forEach(entry => {
+                        id = entry[0]
+                        inPing = entry[1]
+                        if (!inPing) { // make call to ping call member
+                            User.peers[id] && User.peers[id].close()
+                            // document.getElementById(id).remove() // close old bidirectional call
+                        }
+                    })
+                    return // true if in ping call
                 }
-                connectToNewUser(user, data.peerId, stream)
+                
+
+                // not in ping call, replace bidirectional call with unidirectional calls
+                Object.entries(peerInfo).forEach(entry => {
+                    
+                    id = entry[0]
+                    inPing = entry[1]
+                    
+                    if (inPing) { // make call to ping call member
+                        User.peers[id] && User.peers[id].close() // close old bidirectional call
+                        // document.getElementById(id).remove()
+                        const call = user.myPeerObj.call(id, myStream) // make unidirectional call
+                        call.on('stream', userVideoStream => {
+                            console.error("This should never run")
+                        })
+                    }
+                })
             })
         })
 
-        // update dynamic variable
-        // user.socket.on('user-disconnected', peerIds => {
-        //     console.log(User.peers)
-        //     console.log(peerId)
-        //     User.peers[peerId].close()
-        //     alert("event triggered");
-        //     // console.log("triggered")
+        user.socket.on('user-disconnected', peerId => {
             
-        //     if(!User.peerStatuses[peerId]) { // peerId(String):connected(Boolean)
-        //         console.error("User was already disconnected, how did this happen?")
-        //     } else {
-        //         User.peerStatuses[peerId] = false // update dynamic variable
-        //     }
-        // })
+            
+            if (User.peers[peerId]) User.peers[peerId].close()
+            
+        })
 
         // runs when peerjs connection is made
         user.myPeerObj.on('open', myPeerId => {
-            console.log("PeerJS finished connection")
-            console.log("Peer id: ", myPeerId)
+            
+            
             user.myVideo.id = myPeerId // store peer id in html
             user.socket.emit('join-room', ROOM_ID, myPeerId)
         })
 
-        // handle current user disconnect
-        user.myPeerObj.on('close', () => {
-            user.socket.emit('leave-room', ROOM_ID, peerId)  
-            // TODO need to update server's dynamic variables
-        })
-
         joinRoomBtn.classList.add("hidden");
-        //console.log(user.id)
-        console.log("End of function")
     })
 }
-
-// TODO test out to see if peer is there but not showing
-// TODO maybe try another browser popup

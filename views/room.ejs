@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="stylesheet" type="text/css" href="style.css"> 
 
-    <script>    
+    <script>
         const ROOM_ID = "<%= roomId %>"
+        // window.onload = function() {
+        //     if(!window.location.hash) {
+        //         window.location = window.location + '#loaded';
+        //         window.location.reload();
+        //     }
+        // }
     </script>
 
     <script defer src = "https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"> </script>
@@ -47,10 +52,10 @@
 
     <HR>
     <A href="javascript:history.go(-1);">
-        <IMG BORDER = 0 SRC="left.gif";>
+        <!-- <IMG BORDER = 0 SRC="left.gif";> -->
     </A>
     <A href="javascript:history.go(1);">
-        <IMG BORDER = 0 SRC="right.gif";>
+        <!-- <IMG BORDER = 0 SRC="right.gif";> -->
     </A>
     <HR>
 
