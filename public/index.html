@@ -47,14 +47,16 @@
                     <li><a href="#">Log In</a></li>
                     <li><a href="#">Sign Up</a></li>
                 </ul>  
-                
-                <div class="figma-pic">
-                    <img src="figma_home.png" alt="Ping->Moon">
-                </div>
-
+<!--                 
                 <div class="moon-hack">
                     <img src="moon_hack.png" alt="Hack->Moon">
-                </div>
+                </div> -->
+
+                <!-- <div class="figma-pic">
+                    <img src="figma_home.png" alt="Ping->Moon">
+                </div> -->
+
+                
                 
             </nav>  
         </header>
@@ -68,8 +70,8 @@
                 meeting without having to end your current conference?
             </h4> -->
 
-            <!-- <Section> -->
-                <!-- Video Conference -->
+            <!-- ToDo:
+            Add links to the webpages these buttons are supposed to go -->
             <section class="meetings">
                 <button class="butt" onclick="host()">Host a Meeting</button>
                 <button class="butt" onclick="host()">Join a Meeting</button>
@@ -82,44 +84,27 @@
             alert("you clicked host");
         }
     </script>
-    <!-- <div class="gray-container">
-        <div class="container">
-            <ul>
-                <li>
-                    <figure>
-                        <img src="person1.png" alt="A Happy User" height="100px" width="100px">
-                        <blockquote>This ping's feature is something out of the world"</blockquote>
-                        <figcaption>- Person1</figcaption>
-                    </figure>
-                </li>
-            </ul>
-        </div>
-    </div> -->
 
-    <footer>
-        <div class="footer-container">
-            <div class="container">
-                <ul class="footer-links">
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+    
     <div id="video-grid"></div>
 
-    <!-- <HR>
-    <A href="javascript:history.go(-1);">
-        <IMG BORDER = 0 SRC="left.gif";>
-    </A>
-    <A href="javascript:history.go(1);">
-        <IMG BORDER = 0 SRC="right.gif";>
-    </A>
-    <HR> -->
+    <!-- <HR> -->
     <!-- <a href="/room" button id="join-room"> Go to the video conference room>
     </a> -->
-
-    <button id="join-room">Go to the video conference room</button>
     
+    <footer>
+        <div class="footer-container">
+            <ul class="footer-links">
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+    
+    
+    <div class="join-btn">
+        <button id="join-room">Go to the video conference room</button>
+    </div>
+
 </body>
 </html>
