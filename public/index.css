@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css?family=Monsterrat:400,600');
+
+.hidden {
+    display:none
+}
+
+body {
+    /* margin: 50;
+    font-family: "Montserrat"; */
+    /* background-image: url(https://image.shutterstock.com/image-vector/welcome-poster-spectrum-brush-strokes-260nw-1146069941.jpg); */
+    background-image: url(moon_hack.png);
+    background-color: aqua;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: 75% 100%;
+}
+
+/* blockquote {
+    font-size: .9em;
+    line-height: 1.6em;
+} */
+
+/* ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+} */
+
+/* .container{
+    text-align: center;
+    padding: .8em 1.2em;
+} */
+
+/* ul li {
+    text-align: right;
+    color: brown;
+} */
+
+/* header {
+    display: flex;
+    justify-content: space-between;
+} */
+
+.show-dektop > li{
+    text-align: right;
+    /* float: right; */
+    display: inline-block;
+}
+
+li {
+    list-style-type: none;
+    display: inline-block;
+}
+
+ul {
+    text-align: right;
+}
+
+.figma-pic {
+    text-align: right;
+    display: block;
+}
+
+/* .moon-hack {
+    position: absolute;
+    left: 60px;
+    top: 20px;
+} */
+
+.moon-hack img{
+    text-align: center;
+    width: 90%;
+    height:40%;
+    object-fit: cover;
+}
+
+.meetings {
+    position: absolute;
+    height:   auto;
+    left:     10px;
+    bottom:   100px;
+}
+
+.meetings button {
+    background-color: #e90871;
+    border:             none;
+    color:            white;
+    padding:            15px 32px;
+    text-align:         center;
+    text-decoration:    none;
+    display:            inline-block;
+    font-size:          16px;
+    margin:             5px 5px;
+    cursor:             pointer;
+    display:            block;
+}
+
+/* .butt{
+    color: rgb(212, 0, 255);
+    float: left;
+} */
+
+.footer-container {
+    width: 100%;
+    padding: 10px 0px;
+    border-top-right-radius: 40 px;
+    text-align: center;
+}
+
+
+.join-btn button{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.join-btn {
+    position: absolute;
+    height: auto;
+    left: 10px;
+    top: 10px;
+}
+/* .meetings {
+    display: block;
+} */

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="index.css"> 
+
+    <title>Running Ping</title>
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <!-- <a href="#" class="hide-desktop"></a> -->
+                
+                <ul class="show-desktop">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Log In</a></li>
+                    <li><a href="#">Sign Up</a></li>
+                </ul>  
+<!--                 
+                <div class="moon-hack">
+                    <img src="moon_hack.png" alt="Hack->Moon">
+                </div> -->
+
+                <!-- <div class="figma-pic">
+                    <img src="figma_home.png" alt="Ping->Moon">
+                </div> -->
+
+                
+                
+            </nav>  
+        </header>
+
+
+        <!-- window.location.href = 'http://www.google.com'; //Will take you to Google.  -->
+        <!-- <section> -->
+            <!-- <h1>Why dial a ring when you can just ping?</h1>
+            <h4>Have you ever thought how easy would it be to
+                talk to your friend or colleague in a virtual
+                meeting without having to end your current conference?
+            </h4> -->
+
+            <!-- ToDo:
+            Add links to the webpages these buttons are supposed to go -->
+            <section class="meetings">
+                <button class="butt" onclick="host()">Host a Meeting</button>
+                <button class="butt" onclick="host()">Join a Meeting</button>
+                <button class="butt" onclick="host()">Schedule a Meeting</button>
+           </section>
+    </div>
+
+    <script>
+        function host(){
+            alert("you clicked host");
+        }
+    </script>
+
+    
+    <div id="video-grid"></div>
+
+    <!-- <HR> -->
+    <!-- <a href="/room" button id="join-room"> Go to the video conference room>
+    </a> -->
+    
+    <footer>
+        <div class="footer-container">
+            <ul class="footer-links">
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+    
+    
+    <a href="/room">
+        <div class="join-btn">
+            <button id="join-room">Go to the video conference room</button>
+        </div>
+    </a>
+
+</body>
+</html>
