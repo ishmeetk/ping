@@ -56,6 +56,36 @@ ul {
     text-align: right;
 }
 
+.figma-pic {
+    text-align: right;
+    display: block;
+}
+
+.moon-hack {
+    position: absolute;
+    left: 80px;
+    top: 60px;
+}
+
+.moon-hack img{
+    text-align: left;
+    width: 100px;
+    height: 100px;
+}
+
+.meetings {
+    position: absolute;
+    height: auto;
+    left: 100px;
+    top: 150px;
+}
+
+.meetings button {
+    padding: 10px 24px;
+    width: 50%;
+    display: block;
+}
+
 /* .butt{
     color: rgb(212, 0, 255);
     float: left;

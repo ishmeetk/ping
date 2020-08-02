@@ -6,7 +6,7 @@ const { v4: uuidV4 } = require('uuid')
 
 const socketIdToPeerId = {}
 
-app.set('view engine', 'ejs')
+//app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
 // app.get('/', (req, res) => {
@@ -29,7 +29,6 @@ app.get('/room', (req, res) => {
 app.get('/room/:room', (req, res) => {
   //res.render('room', { roomId: req.params.room })
   //res.sendFile(__dirname + '/public/index.html');
-  
 })
 
 io.on('connection', socket => {
