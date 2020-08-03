@@ -6,14 +6,11 @@ let user;
 
 document.addEventListener("DOMContentLoaded", init)
 
-
-
 /*
     Holds all the connection information used throughout this script
-  
     Socket connection, peerjs connection, as well as the user's own video DOM object is stored here
-  
 */
+
 class User {
     static calls
     static inPing = false
@@ -24,13 +21,11 @@ class User {
         
         this.socket = io('/')
         this.socket.on('connect', () => {
-            
-            
         })
         
         this.myPeerObj = new Peer(undefined, {
-          host:'peerjs-server.herokuapp.com', secure:true, port:443
-            // host: '/', port:3001
+          //host:'peerjs-server.herokuapp.com', secure:true, port:443
+         host: '/', port:3001
         })
         
         this.myVideo = document.createElement('video')

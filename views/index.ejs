@@ -47,15 +47,21 @@
             <!-- ToDo:
             Add links to the webpages these buttons are supposed to go -->
             <section class="meetings">
-                <button class="butt" onclick="host()">Host a Meeting</button>
-                <button class="butt" onclick="host()">Join a Meeting</button>
-                <button class="butt" onclick="host()">Schedule a Meeting</button>
+                <a href="/room">
+                    <!-- <div class="join-btn"> -->
+                    <div class="butt">
+                        <button id="join-room">Host a Meeting</button>
+                    </div>
+                </a>
+                <!-- <button class="butt" onclick="meet_but('host')">Host a Meeting</button> -->
+                <button class="butt" onclick="meet_but('join')">Join a Meeting</button>
+                <button class="butt" onclick="meet_but('schedule')">Schedule a Meeting</button>
            </section>
     </div>
 
     <script>
-        function host(){
-            alert("you clicked host");
+        function meet_but(message){
+            alert("you clicked " + message);
         }
     </script>
 
@@ -76,11 +82,11 @@
     </footer>
     
     
-    <a href="/room">
+    <!-- <a href="/room">
         <div class="join-btn">
             <button id="join-room">Go to the video conference room</button>
         </div>
-    </a>
+    </a> -->
 
 </body>
 </html>
